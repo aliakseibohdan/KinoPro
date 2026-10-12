@@ -26,6 +26,13 @@ export default function HistoryPage() {
 
   const API = process.env.NEXT_PUBLIC_API;
 
+  // 🔥 Кнопка назад
+  const goBack = () => {
+    if (typeof window !== "undefined") {
+      window.history.back();
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -64,6 +71,13 @@ export default function HistoryPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-[70vh] px-4 py-10 max-w-5xl mx-auto">
+        <button
+          onClick={goBack}
+          className="mb-6 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-sm"
+        >
+          <i className="fa-solid fa-arrow-left" aria-hidden="true"></i> Назад
+        </button>
+
         <h1 className="text-3xl font-bold mb-6">
           <i className="fa-solid fa-tv mr-2" aria-hidden="true"></i>
           История просмотров

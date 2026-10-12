@@ -20,9 +20,23 @@ export default function AdminPage() {
     setForm({ name: "", email: "", subject: "", message: "" });
   };
 
+  // 🔥 Кнопка назад
+  const goBack = () => {
+    if (typeof window !== "undefined") {
+      window.history.back();
+    }
+  };
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-2xl bg-zinc-900 border border-white/10 rounded-xl p-8 shadow-xl">
+
+        <button
+          onClick={goBack}
+          className="mb-6 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-sm"
+        >
+          <i className="fa-solid fa-arrow-left" aria-hidden="true"></i> Назад
+        </button>
 
         {/* Заголовок */}
         <h1 className="text-3xl font-bold text-center text-white">

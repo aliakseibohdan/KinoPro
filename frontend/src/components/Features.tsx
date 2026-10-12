@@ -35,7 +35,7 @@ export default function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-red-600/50 transition-all hover:bg-slate-800 hover:shadow-lg hover:shadow-red-600/10"
+              className="p-6"
             >
               <div className="text-4xl mb-4 text-red-500">
                 <i className={feature.icon} aria-hidden="true"></i>
