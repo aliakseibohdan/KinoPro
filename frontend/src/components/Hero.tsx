@@ -4,7 +4,10 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-[600px] flex items-center justify-center">
+    // Высота пропорциональна ширине (соотношение сторон баннера 1200x676),
+    // поэтому на любом экране одинаковая компоновка кадра вместо
+    // произвольного кропа object-cover при фиксированной высоте
+    <section className="relative w-full h-[56.3vw] min-h-[440px] max-h-[82vh] flex items-center justify-center">
       {/* Баннер */}
       <img
         src="/banner.jpg"
