@@ -21,7 +21,8 @@ export default function MovieSection({
   type = "movie",
   page = 1,
   enableFavorites = false,
-}: MovieSectionProps) {
+  className = "",
+}: MovieSectionProps & { className?: string }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
 
@@ -35,7 +36,7 @@ export default function MovieSection({
 
   return (
     <section
-      className="py-12 px-4 sm:px-6 lg:px-8 w-full mx-auto"
+      className={`py-12 px-4 sm:px-6 lg:px-8 w-full mx-auto ${className}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

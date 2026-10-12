@@ -99,6 +99,7 @@ export default function Home() {
           <MovieSection
             title="Популярные фильмы"
             movies={formatMovies(popularMovies)}
+            className="-mt-24 relative"
           />
           <MovieSection
             title="Новые релизы"

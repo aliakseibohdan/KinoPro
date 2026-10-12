@@ -20,8 +20,18 @@ export default function Hero() {
           background: [
             "linear-gradient(to bottom, rgba(3,7,18,0.55) 0%, transparent 25%)",
             "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.45) 100%)",
-            "linear-gradient(to top, #030712 0%, rgba(3,7,18,0.65) 28%, transparent 62%)",
+            "linear-gradient(to top, #030712 0%, rgba(3,7,18,0.8) 20%, rgba(3,7,18,0.35) 50%, transparent 80%)",
           ].join(", "),
+        }}
+      />
+
+      {/* Дизеринг-шум: разбивает полосы квантования (banding) на длинном
+          тёмном градиенте — без него плавный переход показывает ступеньки */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[75%] pointer-events-none opacity-[0.045]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
       />
 
