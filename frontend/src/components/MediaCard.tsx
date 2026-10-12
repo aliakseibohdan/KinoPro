@@ -4,11 +4,11 @@ import Link from "next/link";
 
 export default function MediaCard({ item }) {
   const poster = item.poster_path
-    ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+    ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${item.poster_path}`
     : "https://via.placeholder.com/500x750?text=No+Image";
 
   return (
-    <Link href={`/series/${item.id}`}>
+    <Link href={`/tv/${item.id}`}>
       <div
         className="
           bg-[#111]

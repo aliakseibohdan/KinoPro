@@ -43,9 +43,8 @@ export default function HistoryPage() {
 
           const movieDetails = await Promise.all(
             data.map(async (item: HistoryItem) => {
-              const r = await fetch(
-                `https://api.themoviedb.org/3/movie/${item.movieId}?api_key=${process.env.NEXT_PUBLIC_TMDB_KEY}&language=ru-RU`
-              );
+              const r = await fetch(`${API}/api/movies/${item.movieId}`);
+              if (!r.ok) return null;
               return r.json();
             })
           );
@@ -92,7 +91,7 @@ export default function HistoryPage() {
                   className="flex gap-4 bg-zinc-900 border border-white/10 rounded-lg p-4 hover:bg-zinc-800 transition"
                 >
                   <img
-                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                    src={`${process.env.NEXT_PUBLIC_API}/api/img/t/p/w200${movie.poster_path}`}
                     alt={movie.title}
                     className="w-24 h-36 object-cover rounded"
                   />

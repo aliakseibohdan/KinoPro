@@ -119,7 +119,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
   if (!movie) return <div className="text-white p-6">Загрузка...</div>;
 
   const poster = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${movie.poster_path}`
     : "/no-poster.jpg";
 
   // ⭐ Плееры
@@ -200,12 +200,12 @@ export default function MoviePage({ params }: { params: { id: string } }) {
               <img
                 src={
                   actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-                    : "/no-avatar.png"
+                    ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w200${actor.profile_path}`
+                    : "/no-poster.jpg"
                 }
                 alt={actor.name}
                 className="rounded-lg object-cover w-[90px] h-[120px]"
-                onError={(e) => (e.currentTarget.src = "/no-avatar.png")}
+                onError={(e) => (e.currentTarget.src = "/no-poster.jpg")}
               />
               <p className="mt-1 text-xs font-semibold truncate">
                 {actor.name}
@@ -279,7 +279,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
               <img
                 src={
                   film.poster_path
-                    ? `https://image.tmdb.org/t/p/w300${film.poster_path}`
+                    ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w300${film.poster_path}`
                     : "/no-poster.jpg"
                 }
                 alt={film.title ?? "poster"}

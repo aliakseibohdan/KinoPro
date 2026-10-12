@@ -109,7 +109,7 @@ export default function TVGrid({
             if (!show || !show.id) return null;
 
             const image = show.poster_path
-              ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
+              ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${show.poster_path}`
               : "/no-poster.jpg";
 
             return (

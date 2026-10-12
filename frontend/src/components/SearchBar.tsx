@@ -32,11 +32,15 @@ export default function SearchBar() {
     }
 
     const delay = setTimeout(() => {
-      fetch(`${API}/api/search?query=${query}`)
+      fetch(`${API}/api/search?query=${encodeURIComponent(query)}`)
         .then((res) => res.json())
         .then((data) => {
           setResults(data.results || []);
           setShowDropdown(true);
+        })
+        .catch(() => {
+          setResults([]);
+          setShowDropdown(false);
         });
     }, 300);
 
@@ -64,7 +68,7 @@ export default function SearchBar() {
         />
 
         <Link
-          href={`/search?query=${query}`}
+          href={`/search?query=${encodeURIComponent(query)}`}
           className="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white"
         >
           OK
@@ -109,7 +113,7 @@ export default function SearchBar() {
                     <img
                       src={
                         movie.poster_path
-                          ? `https://image.tmdb.org/t/p/w92${movie.poster_path}`
+                          ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w92${movie.poster_path}`
                           : "/no-poster.jpg"
                       }
                       alt={movie.title || movie.name}

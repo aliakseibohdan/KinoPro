@@ -56,14 +56,13 @@ export default function FavoritesPage() {
         if (Array.isArray(data)) {
           const movieDetails = await Promise.all(
             data.map(async (id: number) => {
-              const r = await fetch(
-                `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_KEY}&language=ru-RU`
-              );
+              const r = await fetch(`${API}/api/movies/${id}`);
+              if (!r.ok) return null;
               return r.json();
             })
           );
 
-          setMovies(movieDetails);
+          setMovies(movieDetails.filter((m) => m && m.id));
         }
       } catch (err) {
         console.error("Ошибка загрузки избранного:", err);
@@ -118,7 +117,7 @@ export default function FavoritesPage() {
 
                 <Link href={`/movie/${movie.id}?from=favorites`}>
                   <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    src={`${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
                     className="w-full h-[225px] object-cover"
                   />

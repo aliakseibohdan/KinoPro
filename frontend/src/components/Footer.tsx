@@ -23,7 +23,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><a href="/" className="hover:text-white transition-colors">Главная</a></li>
               <li><a href="/films" className="hover:text-white transition-colors">Фильмы</a></li>
-              <li><a href="/series" className="hover:text-white transition-colors">Сериалы</a></li>
+              <li><a href="/tv" className="hover:text-white transition-colors">Сериалы</a></li>
               <li><a href="/favorites" className="hover:text-white transition-colors">Избранное</a></li>
             </ul>
           </div>

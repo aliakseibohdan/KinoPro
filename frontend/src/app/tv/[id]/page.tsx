@@ -42,7 +42,7 @@ export default function TVDetailsPage({ params }: { params: { id: string } }) {
   if (!tv) return <div className="p-6 text-white">Сериал не найден</div>;
 
   const poster = tv.poster_path
-    ? `https://image.tmdb.org/t/p/w500${tv.poster_path}`
+    ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${tv.poster_path}`
     : "/no-poster.jpg";
 
   return (
@@ -95,12 +95,12 @@ export default function TVDetailsPage({ params }: { params: { id: string } }) {
               <img
                 src={
                   actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                    : "/no-avatar.png"
+                    ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w185${actor.profile_path}`
+                    : "/no-poster.jpg"
                 }
                 alt={actor.name}
                 className="rounded-lg object-cover w-[70px] h-[100px]"
-                onError={(e) => (e.currentTarget.src = "/no-avatar.png")}
+                onError={(e) => (e.currentTarget.src = "/no-poster.jpg")}
               />
               <p className="mt-1 text-[10px] font-semibold truncate">{actor.name}</p>
               <p className="text-[9px] opacity-60 truncate">{actor.character}</p>
@@ -114,7 +114,7 @@ export default function TVDetailsPage({ params }: { params: { id: string } }) {
         <h2 className="text-xl font-semibold mb-3">Смотреть онлайн</h2>
 
         <iframe
-          src={`https://vidsrc.cc/embed/tv/${cleanId}`}
+          src={`${API}/api/proxy/collaps?id=${cleanId}`}
           allowFullScreen
           className="w-full rounded-lg border border-white/10 bg-black"
           style={{ height: "320px" }}

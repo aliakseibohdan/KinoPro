@@ -43,23 +43,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("avatar", icon);
   };
 
-  const refreshUser = async () => {
-    try {
-      const res = await fetch(`${API}/api/user/me`, {
-        credentials: "include",
-      });
+  // Защита от параллельных вызовов (в dev-режиме React StrictMode
+  // вызывает эффект дважды — без guards улетало два запроса /api/user/me)
+  let meInFlight: Promise<void> | null = null;
 
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data);
-      } else {
+  const refreshUser = async () => {
+    if (meInFlight) return meInFlight;
+
+    meInFlight = (async () => {
+      try {
+        const res = await fetch(`${API}/api/user/me`, {
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        } else {
+          setUser(null);
+        }
+      } catch {
         setUser(null);
+      } finally {
+        setLoading(false);
+        meInFlight = null;
       }
-    } catch {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
+    })();
+
+    return meInFlight;
   };
 
   useEffect(() => {

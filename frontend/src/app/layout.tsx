@@ -16,7 +16,6 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className="bg-slate-950 text-white">
-
         {/* 🔥 Оборачиваем ВСЁ приложение в AuthProvider */}
         <AuthProvider>
 

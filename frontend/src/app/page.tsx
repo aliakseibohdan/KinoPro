@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import MovieSection from "@/components/MovieSection";
 import Features from "@/components/Features";
@@ -31,6 +30,13 @@ export default function Home() {
         let releasesList: Movie[] = [];
 
         // 🔥 Загружаем 5 страниц = 100 фильмов
+        const dedupe = (list: Movie[]) => {
+          const seen = new Set<number>();
+          return list.filter((m) =>
+            seen.has(m.id) ? false : (seen.add(m.id), true)
+          );
+        };
+
         for (let page = 1; page <= 5; page++) {
           const popular = await fetchPopularMovies(page);
           popularList.push(...popular.results);
@@ -39,8 +45,10 @@ export default function Home() {
           releasesList.push(...releases.results);
         }
 
-        setPopularMovies(popularList.slice(0, 100));
-        setNewReleases(releasesList.slice(0, 100));
+        // Список популярного меняется между запросами — страницы могут
+        // пересекаться, поэтому убираем дубли по id (иначе duplicate key в React)
+        setPopularMovies(dedupe(popularList).slice(0, 100));
+        setNewReleases(dedupe(releasesList).slice(0, 100));
 
         setError(null);
       } catch (err) {
@@ -53,8 +61,7 @@ export default function Home() {
             title: "Интерстеллар",
             vote_average: 8.6,
             genre_ids: [878],
-            poster_path:
-              "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&h=600&fit=crop",
+            poster_path: "",
           },
         ]);
       } finally {
@@ -72,15 +79,13 @@ export default function Home() {
       rating: movie.vote_average,
       genre: "Фильм",
       image: movie.poster_path
-        ? `https://image.tmdb.org/t/p/w400${movie.poster_path}`
+        ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w400${movie.poster_path}`
         : "/no-poster.jpg",
     }));
   };
 
   return (
     <main>
-      <Header />
-
       <div className="-mt-10">
         <Hero />
       </div>

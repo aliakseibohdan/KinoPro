@@ -126,7 +126,7 @@ export default function MovieGrid({
             if (!movie || !movie.id) return null;
 
             const image = movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+              ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${movie.poster_path}`
               : "/no-poster.jpg";
 
             const type: "movie" | "tv" = movie.__type || "movie";

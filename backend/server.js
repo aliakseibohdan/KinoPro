@@ -12,6 +12,56 @@ const cookieParser = require("cookie-parser");
 dotenv.config({ path: __dirname + "/.env" });
 
 // ---------------------------------------------------------
+// 🔥 Обход DNS-блокировки TMDB на локальной машине
+// (если резолвер отдаёт 127.0.0.1 для TMDB — резолвим через 1.1.1.1)
+// ---------------------------------------------------------
+const dns = require("dns");
+
+function installTmdbDnsOverride() {
+  const TMDB_HOSTS = new Set(["api.themoviedb.org", "image.tmdb.org"]);
+  const resolver = new dns.Resolver();
+  resolver.setServers(["1.1.1.1"]);
+  const originalLookup = dns.lookup.bind(dns);
+
+  dns.lookup = function (hostname, options, callback) {
+    if (typeof options === "function") {
+      callback = options;
+      options = {};
+    }
+    if (!TMDB_HOSTS.has(hostname)) {
+      return originalLookup(hostname, options, callback);
+    }
+
+    const wantV6 = options.family === 6;
+    resolver[wantV6 ? "resolve6" : "resolve4"](hostname, (err, addresses) => {
+      if (err || !addresses || !addresses.length) {
+        return originalLookup(hostname, options, callback);
+      }
+      if (options.all) {
+        callback(
+          null,
+          addresses.map((address) => ({ address, family: wantV6 ? 6 : 4 }))
+        );
+      } else {
+        callback(null, addresses[0], wantV6 ? 6 : 4);
+      }
+    });
+  };
+}
+
+(async () => {
+  try {
+    const { address } = await dns.promises.lookup("api.themoviedb.org");
+    if (address === "127.0.0.1" || address === "::1") {
+      installTmdbDnsOverride();
+      console.warn(
+        `⚠️  DNS этой машины блокирует TMDB (api.themoviedb.org → ${address}). Включён обход через публичный DNS 1.1.1.1 только для доменов TMDB в этом процессе.`
+      );
+    }
+  } catch {}
+})();
+
+// ---------------------------------------------------------
 // 🔥 2. Подключение MongoDB
 // ---------------------------------------------------------
 const connectDB = require("./config/db");
@@ -187,9 +237,49 @@ app.post("/api/user/history", auth, async (req, res) => {
   res.json(user.history);
 });
 
+app.get("/api/user/history", auth, async (req, res) => {
+  const user = await User.findById(req.userId);
+  res.json(user.history);
+});
+
+// ---------------------------------------------------------
+// 🖼️ ПРОКСИ КАРТИНОК TMDB (браузер машины с DNS-блокировкой
+// не может грузить image.tmdb.org напрямую)
+// ---------------------------------------------------------
+app.get("/api/img/*", async (req, res) => {
+  try {
+    const response = await fetch(`https://image.tmdb.org/${req.params[0]}`, {
+      headers: { "User-Agent": "Mozilla/5.0", Accept: "image/*" },
+    });
+
+    if (!response.ok) return res.status(response.status).end();
+
+    res.setHeader(
+      "Content-Type",
+      response.headers.get("content-type") || "image/jpeg"
+    );
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.send(Buffer.from(await response.arrayBuffer()));
+  } catch (err) {
+    res.status(502).end();
+  }
+});
+
 // ---------------------------------------------------------
 // 🔥 ПРОКСИ ДЛЯ COLLAPS
 // ---------------------------------------------------------
+// Плеер-провайдеры (collaps/hdvb/kodik) не отвечают — вместо 500
+// отдаём страницу-заглушку, чтобы плеер падал без ошибок в консоли
+function playerUnavailable(res, provider) {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.send(
+    `<html><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#09090b;color:#a1a1aa;font-family:system-ui;text-align:center">` +
+      `<div><div style="font-size:42px;margin-bottom:12px">📺</div>` +
+      `<p>Плеер «${provider}» временно недоступен.<br/>Провайдер не отвечает.</p></div>` +
+      `</body></html>`
+  );
+}
+
 app.get("/api/proxy/collaps", async (req, res) => {
   const { id } = req.query;
 
@@ -205,12 +295,14 @@ app.get("/api/proxy/collaps", async (req, res) => {
       },
     });
 
+    if (!response.ok) return playerUnavailable(res, "Collaps");
+
     const html = await response.text();
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.send(html);
   } catch (err) {
-    res.status(500).json({ error: "Proxy error", details: err.message });
+    playerUnavailable(res, "Collaps");
   }
 });
 
@@ -232,12 +324,14 @@ app.get("/api/proxy/hdvb", async (req, res) => {
       },
     });
 
+    if (!response.ok) return playerUnavailable(res, "HDVB");
+
     const html = await response.text();
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.send(html);
   } catch (err) {
-    res.status(500).json({ error: "Proxy error", details: err.message });
+    playerUnavailable(res, "HDVB");
   }
 });
 
@@ -259,12 +353,14 @@ app.get("/api/proxy/kodik", async (req, res) => {
       },
     });
 
+    if (!response.ok) return playerUnavailable(res, "Kodik");
+
     const html = await response.text();
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.send(html);
   } catch (err) {
-    res.status(500).json({ error: "Proxy error", details: err.message });
+    playerUnavailable(res, "Kodik");
   }
 });
 
