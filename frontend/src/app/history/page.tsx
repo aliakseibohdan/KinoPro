@@ -64,7 +64,10 @@ export default function HistoryPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-[70vh] px-4 py-10 max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">📺 История просмотров</h1>
+        <h1 className="text-3xl font-bold mb-6">
+          <i className="fa-solid fa-tv mr-2" aria-hidden="true"></i>
+          История просмотров
+        </h1>
 
         {loading ? (
           <p>Загрузка...</p>
@@ -100,7 +103,8 @@ export default function HistoryPage() {
                     <div>
                       <h2 className="text-lg font-semibold">{movie.title}</h2>
                       <p className="text-sm opacity-70">
-                        ⭐ {movie.vote_average.toFixed(1)}
+                        <i className="fa-solid fa-star" aria-hidden="true"></i>{" "}
+                        {movie.vote_average.toFixed(1)}
                       </p>
                     </div>
 

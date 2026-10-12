@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import Header from "@/components/Header";
 import { AuthProvider } from "@/context/AuthContext";
 

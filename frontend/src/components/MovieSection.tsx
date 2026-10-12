@@ -62,7 +62,7 @@ export default function MovieSection({
           hovered ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        ❮
+        <i className="fa-solid fa-chevron-left" aria-hidden="true"></i>
       </button>
 
       <div
@@ -91,7 +91,7 @@ export default function MovieSection({
           hovered ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        ❯
+        <i className="fa-solid fa-chevron-right" aria-hidden="true"></i>
       </button>
     </section>
   );

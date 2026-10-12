@@ -3,7 +3,8 @@ export default function PrivacyPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-3xl bg-zinc-900 border border-white/10 rounded-xl p-8 shadow-xl">
         <h1 className="text-3xl font-bold mb-6 text-center text-white">
-          🔒 Политика конфиденциальности
+          <i className="fa-solid fa-lock mr-2" aria-hidden="true"></i>
+          Политика конфиденциальности
         </h1>
 
         <div className="text-white/90 leading-relaxed space-y-4">

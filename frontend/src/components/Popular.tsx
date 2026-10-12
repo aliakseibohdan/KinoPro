@@ -26,7 +26,8 @@ export default function Popular() {
             <div className="p-3 text-center">
               <h3 className="text-white text-sm font-medium">{movie.title}</h3>
               <p className="text-yellow-400 text-xs mt-1">
-                ⭐ {movie.rating}
+                <i className="fa-solid fa-star" aria-hidden="true"></i>{" "}
+                {movie.rating}
               </p>
             </div>
           </div>

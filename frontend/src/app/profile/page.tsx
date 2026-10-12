@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import AvatarIcon from "@/components/AvatarIcon";
 
 export default function ProfilePage() {
   const { user, logout, avatar, updateAvatar } = useAuth();
@@ -25,15 +26,15 @@ export default function ProfilePage() {
 
   // 9 молодёжных аватарок
   const icons = [
-    "😎",
-    "🤟",
-    "🧢",
-    "🎧",
-    "🚀",
-    "🔥",
-    "🐼",
-    "👾",
-    "💀",
+    "fa-solid fa-face-grin-stars",
+    "fa-solid fa-hand-peace",
+    "fa-solid fa-hat-cowboy",
+    "fa-solid fa-headphones",
+    "fa-solid fa-rocket",
+    "fa-solid fa-fire",
+    "fa-solid fa-hippo",
+    "fa-solid fa-gamepad",
+    "fa-solid fa-skull",
   ];
 
   const handleSelect = (icon: string) => {
@@ -54,7 +55,7 @@ export default function ProfilePage() {
             className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-3xl hover:bg-white/20 transition"
             title="Изменить аватар"
           >
-            {avatar}
+            <AvatarIcon value={avatar} />
           </button>
 
           <div>
@@ -69,21 +70,24 @@ export default function ProfilePage() {
             href="/favorites"
             className="px-4 py-3 rounded bg-white/5 hover:bg-white/10 transition"
           >
-            ⭐ Избранное
+            <i className="fa-solid fa-star text-yellow-400 mr-2" aria-hidden="true"></i>
+            Избранное
           </Link>
 
           <Link
             href="/history"
             className="px-4 py-3 rounded bg-white/5 hover:bg-white/10 transition"
           >
-            📺 История просмотров
+            <i className="fa-solid fa-tv mr-2" aria-hidden="true"></i>
+            История просмотров
           </Link>
 
           <Link
              href="/admin"
              className="px-4 py-3 rounded bg-white/5 hover:bg-white/10 transition"
           >
-            🛠 Администрация сайта
+            <i className="fa-solid fa-screwdriver-wrench mr-2" aria-hidden="true"></i>
+            Администрация сайта
           </Link>
         </div>
 
@@ -108,7 +112,7 @@ export default function ProfilePage() {
                     onClick={() => handleSelect(icon)}
                     className="w-16 h-16 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition"
                   >
-                    {icon}
+                    <AvatarIcon value={icon} />
                   </button>
                 ))}
               </div>

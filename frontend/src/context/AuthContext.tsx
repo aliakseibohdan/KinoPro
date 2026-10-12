@@ -21,7 +21,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   logout: () => {},
   refreshUser: async () => {},
-  avatar: "👤",
+  avatar: "fa-solid fa-user",
   updateAvatar: () => {},
 });
 
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [avatar, setAvatar] = useState("👤");
+  const [avatar, setAvatar] = useState("fa-solid fa-user");
 
   const API = process.env.NEXT_PUBLIC_API;
 

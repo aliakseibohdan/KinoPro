@@ -38,7 +38,8 @@ export default function TVCard({ id, title, rating, year, image }: TVCardProps) 
             <p className="text-gray-400 text-[10px]">{year}</p>
 
             <span className="text-yellow-400 text-[10px] font-semibold">
-              ⭐ {rating?.toFixed(1)}
+              <i className="fa-solid fa-star" aria-hidden="true"></i>{" "}
+              {rating?.toFixed(1)}
             </span>
           </div>
         </div>

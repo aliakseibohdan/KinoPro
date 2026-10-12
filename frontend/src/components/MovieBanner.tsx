@@ -7,21 +7,21 @@ const featuredMovies = [
     id: 1,
     title: 'Дюна: Часть вторая',
     rating: 8.5,
-    image: '🌍',
+    image: 'fa-solid fa-earth-europe',
     description: 'Эпическая фантастика в космосе',
   },
   {
     id: 2,
     title: 'Оппенгеймер',
     rating: 8.4,
-    image: '⚛️',
+    image: 'fa-brands fa-react',
     description: 'История создания атомной бомбы',
   },
   {
     id: 3,
     title: 'Барби',
     rating: 7.9,
-    image: '💖',
+    image: 'fa-solid fa-heart',
     description: 'Веселая комедия о кукле Барби',
   },
 ];
@@ -42,7 +42,7 @@ export default function MovieBanner() {
     <div className="relative h-96 md:h-screen bg-gradient-to-r from-red-600 to-black overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 flex items-center justify-center text-8xl md:text-9xl opacity-20">
-        {movie.image}
+        <i className={movie.image} aria-hidden="true"></i>
       </div>
 
       {/* Content */}
@@ -58,7 +58,9 @@ export default function MovieBanner() {
           {/* Rating */}
           <div className="flex items-center gap-4 mb-8">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">⭐</span>
+              <span className="text-2xl">
+                <i className="fa-solid fa-star text-yellow-400" aria-hidden="true"></i>
+              </span>
               <span className="text-2xl font-bold text-yellow-400">
                 {movie.rating}
               </span>
@@ -68,10 +70,12 @@ export default function MovieBanner() {
           {/* Buttons */}
           <div className="flex gap-4 flex-wrap">
             <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold text-lg transition transform hover:scale-105">
-              🎬 Смотреть трейлер
+              <i className="fa-solid fa-clapperboard mr-2" aria-hidden="true"></i>
+              Смотреть трейлер
             </button>
             <button className="bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition border-2 border-red-600">
-              🎟️ Купить билет
+              <i className="fa-solid fa-ticket mr-2" aria-hidden="true"></i>
+              Купить билет
             </button>
           </div>
         </div>

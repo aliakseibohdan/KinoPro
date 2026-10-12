@@ -1,22 +1,22 @@
 export default function Features() {
   const features = [
     {
-      icon: '🎬',
+      icon: 'fa-solid fa-clapperboard',
       title: 'Огромная библиотека',
       description: 'Более 100 000 фильмов и сериалов на любой вкус',
     },
     {
-      icon: '⚡',
+      icon: 'fa-solid fa-bolt',
       title: 'Высокое качество',
       description: 'Смотрите в 4K и Full HD без буферизации',
     },
     {
-      icon: '📱',
+      icon: 'fa-solid fa-mobile-screen-button',
       title: 'Все устройства',
       description: 'Смотрите на телефоне, планшете или ТВ',
     },
     {
-      icon: '👥',
+      icon: 'fa-solid fa-users',
       title: 'Бесплатно',
       description: '24/7',
     },
@@ -37,7 +37,9 @@ export default function Features() {
               key={index}
               className="p-6 rounded-lg bg-slate-800/50 border border-slate-700 hover:border-red-600/50 transition-all hover:bg-slate-800 hover:shadow-lg hover:shadow-red-600/10"
             >
-              <div className="text-4xl mb-4">{feature.icon}</div>
+              <div className="text-4xl mb-4 text-red-500">
+                <i className={feature.icon} aria-hidden="true"></i>
+              </div>
               <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
               <p className="text-gray-400">{feature.description}</p>
             </div>

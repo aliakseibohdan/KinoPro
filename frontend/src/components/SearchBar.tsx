@@ -99,7 +99,7 @@ export default function SearchBar() {
                 onClick={closeSearch}
                 className="absolute top-2 right-2 text-white text-xl hover:text-red-500"
               >
-                ✕
+                  <i className="fa-solid fa-xmark" aria-hidden="true"></i>
               </button>
 
               <div className="pt-8">

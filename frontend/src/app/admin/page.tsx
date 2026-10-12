@@ -26,7 +26,8 @@ export default function AdminPage() {
 
         {/* Заголовок */}
         <h1 className="text-3xl font-bold text-center text-white">
-          🛠 Администрация сайта
+          <i className="fa-solid fa-screwdriver-wrench mr-2" aria-hidden="true"></i>
+          Администрация сайта
         </h1>
 
         {/* 🔥 Почта — очень маленький шрифт */}

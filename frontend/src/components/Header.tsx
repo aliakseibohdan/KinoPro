@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import SearchBar from "@/components/SearchBar";
+import AvatarIcon from "@/components/AvatarIcon";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Header() {
@@ -62,7 +63,7 @@ export default function Header() {
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition text-xl"
                 title={isProfilePage ? "Свернуть профиль" : "Открыть профиль"}
               >
-                {avatar || "🚀"}
+                <AvatarIcon value={avatar || "fa-solid fa-user-astronaut"} />
               </button>
             ) : (
               <>
@@ -70,7 +71,7 @@ export default function Header() {
                   onClick={() => setProfileOpen(!profileOpen)}
                   className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition text-xl"
                 >
-                  😊
+                  <i className="fa-regular fa-face-smile" aria-hidden="true"></i>
                 </button>
 
                 {profileOpen && (
@@ -93,7 +94,7 @@ export default function Header() {
           className="lg:hidden text-white text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          ☰
+          <i className="fa-solid fa-bars" aria-hidden="true"></i>
         </button>
       </div>
     </header>

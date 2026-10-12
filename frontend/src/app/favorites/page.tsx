@@ -83,10 +83,13 @@ export default function FavoritesPage() {
           onClick={goBack}
           className="mb-6 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-sm"
         >
-          ← Назад
+          <i className="fa-solid fa-arrow-left" aria-hidden="true"></i> Назад
         </button>
 
-        <h1 className="text-3xl font-bold mb-6">⭐ Избранное</h1>
+        <h1 className="text-3xl font-bold mb-6">
+          <i className="fa-solid fa-star text-yellow-400 mr-2" aria-hidden="true"></i>
+          Избранное
+        </h1>
 
         {loading ? (
           <p>Загрузка...</p>
@@ -124,7 +127,8 @@ export default function FavoritesPage() {
                   <div className="p-2">
                     <h2 className="text-xs font-semibold truncate">{movie.title}</h2>
                     <p className="text-[10px] opacity-70">
-                      ⭐ {movie.vote_average.toFixed(1)}
+                      <i className="fa-solid fa-star" aria-hidden="true"></i>{" "}
+                      {movie.vote_average.toFixed(1)}
                     </p>
                   </div>
                 </Link>

@@ -53,7 +53,7 @@ export default function TVDetailsPage({ params }: { params: { id: string } }) {
         onClick={goBack}
         className="mb-4 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-sm"
       >
-        ← Назад
+        <i className="fa-solid fa-arrow-left" aria-hidden="true"></i> Назад
       </button>
 
       {/* Постер + Информация */}

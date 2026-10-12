@@ -26,7 +26,8 @@ export default function AdvertisingPage() {
 
         {/* Заголовок */}
         <h1 className="text-3xl font-bold text-center text-white">
-          💼 Рекламодателям
+          <i className="fa-solid fa-briefcase mr-2" aria-hidden="true"></i>
+          Рекламодателям
         </h1>
 
         {/* 🔥 Почта — маленький шрифт */}

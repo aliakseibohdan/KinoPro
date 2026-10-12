@@ -33,7 +33,8 @@ export default function MediaCard({ item }) {
           </h3>
 
           <p className="text-xs text-gray-400 mt-1">
-            ⭐ {item.vote_average?.toFixed(1)}
+            <i className="fa-solid fa-star" aria-hidden="true"></i>{" "}
+            {item.vote_average?.toFixed(1)}
           </p>
         </div>
       </div>

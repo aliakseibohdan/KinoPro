@@ -47,7 +47,7 @@ export default function SeriesPage() {
         onClick={goBack}
         className="absolute top-4 left-4 z-50 px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg text-sm text-white"
       >
-        ← Назад
+        <i className="fa-solid fa-arrow-left" aria-hidden="true"></i> Назад
       </button>
 
       <aside className="w-44 bg-[#0d0d0d]/90 border-r border-white/10 h-screen sticky top-0 overflow-y-auto">
