@@ -12,8 +12,18 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Затемнение */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/* Кинематографичное затемнение: виньетка + плавный переход
+          картинки в фон страницы (#030712) вместо резкой нижней границы */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: [
+            "linear-gradient(to bottom, rgba(3,7,18,0.55) 0%, transparent 25%)",
+            "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.45) 100%)",
+            "linear-gradient(to top, #030712 0%, rgba(3,7,18,0.65) 28%, transparent 62%)",
+          ].join(", "),
+        }}
+      />
 
       {/* Контент */}
       <div className="relative max-w-4xl mx-auto px-4 text-center">
