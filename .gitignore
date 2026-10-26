@@ -13,3 +13,6 @@ frontend/.env
 # System
 .DS_Store
 .zcode/
+
+# Build artifacts
+frontend/tsconfig.tsbuildinfo

@@ -82,8 +82,13 @@ router.get("/:id", async (req, res) => {
       return res.status(400).json({ error: "Invalid TV ID" });
     }
 
-    const endpoint = `/tv/${id}?language=ru-RU`;
+    const endpoint = `/tv/${id}?language=ru-RU&append_to_response=external_ids`;
     const data = await tmdb(endpoint);
+
+    // imdb_id наружу в том же виде, что и у фильмов
+    if (data.external_ids) {
+      data.imdb_id = data.external_ids.imdb_id || null;
+    }
 
     res.json(data);
   } catch (err) {

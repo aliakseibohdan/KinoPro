@@ -5,6 +5,8 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import YohohoPlayer from "@/components/YohohoPlayer";
+import EmbedPlayer from "@/components/EmbedPlayer";
 
 type Movie = {
   id: number;
@@ -31,8 +33,9 @@ export default function MoviePage({ params }: { params: { id: string } }) {
   const [actors, setActors] = useState<any[]>([]);
   const [similar, setSimilar] = useState<any[]>([]);
   const [isFav, setIsFav] = useState(false);
-
-  const [activePlayer, setActivePlayer] = useState("collaps");
+  // ⭐ ID Кинопоиска (undefined — ищем, null — нет, строка — найден)
+  const [kpId, setKpId] = useState<string | null | undefined>(undefined);
+  const [activePlayer, setActivePlayer] = useState("vidsrc");
 
   const API = process.env.NEXT_PUBLIC_API || "";
 
@@ -50,6 +53,7 @@ export default function MoviePage({ params }: { params: { id: string } }) {
     setMovie(null);
     setActors([]);
     setSimilar([]);
+    setKpId(undefined);
   }, [id]);
 
   useEffect(() => {
@@ -74,6 +78,25 @@ export default function MoviePage({ params }: { params: { id: string } }) {
     };
 
     load();
+  }, [id, API]);
+
+  // ⭐ ID Кинопоиска через Wikidata (null → плеер ищет по названию + году)
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3500);
+
+    fetch(`${API}/api/kinopoisk/movie/${id}`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : { kinopoiskId: null }))
+      .then((data) =>
+        setKpId(data.kinopoiskId ? String(data.kinopoiskId) : null)
+      )
+      .catch(() => setKpId(null))
+      .finally(() => clearTimeout(timer));
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [id, API]);
 
   useEffect(() => {
@@ -121,13 +144,6 @@ export default function MoviePage({ params }: { params: { id: string } }) {
   const poster = movie.poster_path
     ? `${process.env.NEXT_PUBLIC_API}/api/img/t/p/w500${movie.poster_path}`
     : "/no-poster.jpg";
-
-  // ⭐ Плееры
-  const players = {
-    collaps: `${API}/api/proxy/collaps?id=${movie.id}`,
-    hdvb: `${API}/api/proxy/hdvb?id=${movie.id}`,
-    kodik: movie.imdb_id ? `${API}/api/proxy/kodik?id=${movie.imdb_id}` : null,
-  };
 
   return (
     <div className="p-4 text-white max-w-5xl mx-auto">
@@ -230,49 +246,59 @@ export default function MoviePage({ params }: { params: { id: string } }) {
         <h2 className="text-xl font-semibold mb-3">Смотреть онлайн</h2>
 
         <div className="flex gap-3 mb-4">
-          <button
-            onClick={() => setActivePlayer("collaps")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
-              activePlayer === "collaps"
-                ? "bg-pink-600 text-white"
-                : "bg-white/10 text-gray-300 hover:bg-white/20"
-            }`}
-          >
-            Плеер 1
-          </button>
-
-          <button
-            onClick={() => setActivePlayer("hdvb")}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
-              activePlayer === "hdvb"
-                ? "bg-pink-600 text-white"
-                : "bg-white/10 text-gray-300 hover:bg-white/20"
-            }`}
-          >
-            Плеер 2
-          </button>
-
-          {players.kodik && (
+          {movie.imdb_id && (
             <button
-              onClick={() => setActivePlayer("kodik")}
+              onClick={() => setActivePlayer("vidsrc")}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
-                activePlayer === "kodik"
+                activePlayer === "vidsrc"
                   ? "bg-pink-600 text-white"
                   : "bg-white/10 text-gray-300 hover:bg-white/20"
               }`}
             >
-              Плеер 3
+              Плеер 1
             </button>
           )}
+
+          {movie.imdb_id && (
+            <button
+              onClick={() => setActivePlayer("embed2")}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                activePlayer === "embed2"
+                  ? "bg-pink-600 text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20"
+              }`}
+            >
+              Плеер 2
+            </button>
+          )}
+
+          <button
+            onClick={() => setActivePlayer("yohoho")}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+              activePlayer === "yohoho"
+                ? "bg-pink-600 text-white"
+                : "bg-white/10 text-gray-300 hover:bg-white/20"
+            }`}
+          >
+            Плеер 3
+          </button>
         </div>
 
-        <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden">
-          <iframe
-            src={players[activePlayer] || ""}
-            allowFullScreen
-            className="w-full h-full border-0"
-          ></iframe>
-        </div>
+        {activePlayer === "vidsrc" && movie.imdb_id ? (
+          <EmbedPlayer
+            src={`https://vidsrc.to/embed/movie/${movie.imdb_id}`}
+          />
+        ) : activePlayer === "embed2" && movie.imdb_id ? (
+          <EmbedPlayer src={`https://www.2embed.cc/embed/${movie.imdb_id}`} />
+        ) : kpId === undefined ? (
+          <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden" />
+        ) : (
+          <YohohoPlayer
+            kinopoiskId={kpId ?? undefined}
+            title={movie.title}
+            year={movie.release_date?.slice(0, 4)}
+          />
+        )}
       </div>
 
       {/* ⭐ Похожие фильмы */}

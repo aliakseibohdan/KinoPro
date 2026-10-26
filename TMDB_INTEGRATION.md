@@ -68,6 +68,11 @@
 - **GET** `/api/movies/genre/:genreId?page=1`
 - Get movies filtered by genre
 
+### Kinopoisk ID
+- **GET** `/api/kinopoisk/:type/:tmdbId` (`type` = `movie` | `tv`)
+- Resolves a TMDB id to a KinoPoisk film id via Wikidata (P2603), cached in Mongo
+- Returns `{ "kinopoiskId": 361 }` or `{ "kinopoiskId": null }` when no id exists
+
 ## Usage Example in Frontend
 
 ```typescript

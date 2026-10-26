@@ -3,11 +3,16 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
+import YohohoPlayer from "@/components/YohohoPlayer";
+import EmbedPlayer from "@/components/EmbedPlayer";
 
 export default function TVDetailsPage({ params }: { params: { id: string } }) {
   const [tv, setTv] = useState<any | null>(null);
   const [credits, setCredits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  // ⭐ ID Кинопоиска (undefined — ищем, null — нет, строка — найден)
+  const [kpId, setKpId] = useState<string | null | undefined>(undefined);
+  const [activePlayer, setActivePlayer] = useState("vidsrc");
 
   const API = process.env.NEXT_PUBLIC_API;
 
@@ -36,6 +41,25 @@ export default function TVDetailsPage({ params }: { params: { id: string } }) {
     };
 
     load();
+  }, [cleanId, API]);
+
+  // ⭐ ID Кинопоиска через Wikidata (null → плеер ищет по названию + году)
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3500);
+
+    fetch(`${API}/api/kinopoisk/tv/${cleanId}`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : { kinopoiskId: null }))
+      .then((data) =>
+        setKpId(data.kinopoiskId ? String(data.kinopoiskId) : null)
+      )
+      .catch(() => setKpId(null))
+      .finally(() => clearTimeout(timer));
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [cleanId, API]);
 
   if (loading) return <div className="p-6 text-white">Загрузка...</div>;
@@ -109,16 +133,62 @@ export default function TVDetailsPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      {/* Плеер */}
+      {/* Плееры */}
       <div className="mt-10">
         <h2 className="text-xl font-semibold mb-3">Смотреть онлайн</h2>
 
-        <iframe
-          src={`${API}/api/proxy/collaps?id=${cleanId}`}
-          allowFullScreen
-          className="w-full rounded-lg border border-white/10 bg-black"
-          style={{ height: "320px" }}
-        />
+        <div className="flex gap-3 mb-4">
+          {tv.imdb_id && (
+            <button
+              onClick={() => setActivePlayer("vidsrc")}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+                activePlayer === "vidsrc"
+                  ? "bg-pink-600 text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20"
+              }`}
+            >
+              Плеер 1
+            </button>
+          )}
+
+          <button
+            onClick={() => setActivePlayer("embed2")}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+              activePlayer === "embed2"
+                ? "bg-pink-600 text-white"
+                : "bg-white/10 text-gray-300 hover:bg-white/20"
+            }`}
+          >
+            Плеер 2
+          </button>
+
+          <button
+            onClick={() => setActivePlayer("yohoho")}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+              activePlayer === "yohoho"
+                ? "bg-pink-600 text-white"
+                : "bg-white/10 text-gray-300 hover:bg-white/20"
+            }`}
+          >
+            Плеер 3
+          </button>
+        </div>
+
+        {activePlayer === "vidsrc" && tv.imdb_id ? (
+          <EmbedPlayer src={`https://vidsrc.to/embed/tv/${tv.imdb_id}/1-1`} />
+        ) : activePlayer === "embed2" ? (
+          <EmbedPlayer
+            src={`https://www.2embed.cc/embed/tvmdb/${cleanId}-1-1`}
+          />
+        ) : kpId === undefined ? (
+          <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden" />
+        ) : (
+          <YohohoPlayer
+            kinopoiskId={kpId ?? undefined}
+            title={tv.name}
+            year={tv.first_air_date?.slice(0, 4)}
+          />
+        )}
       </div>
     </main>
   );

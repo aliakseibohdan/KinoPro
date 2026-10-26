@@ -373,6 +373,7 @@ const tvRouter = require("./routes/tv");
 const searchRouter = require("./routes/search");
 const similarRouter = require("./routes/similar");
 const similarTvRouter = require("./routes/similarTv");
+const kinopoiskRouter = require("./routes/kinopoisk");
 
 app.use("/api/movies", moviesRouter);
 app.use("/api/movies", moviesFilterRouter); // ⭐ ДОБАВЛЕНО
@@ -380,6 +381,7 @@ app.use("/api/tv", tvRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/similar", similarRouter);
 app.use("/api/similar-tv", similarTvRouter);
+app.use("/api/kinopoisk", kinopoiskRouter);
 
 // ---------------------------------------------------------
 app.get("/", (req, res) => {
